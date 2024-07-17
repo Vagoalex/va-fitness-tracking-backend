@@ -1,9 +1,9 @@
-import { GetCoursesQueryModel } from "../models/course/getCoursesQueryModel";
-import { CourseViewModel } from "../models/course/courseViewModel";
-import { CourseUpdateModel } from "../models/course/courseUpdateModel";
-import { MAIN_DB } from "../infrastrucure/db";
+import { GetCoursesQueryModel } from "../../models/course/getCoursesQueryModel";
+import { CourseViewModel } from "../../models/course/courseViewModel";
+import { CourseUpdateModel } from "../../models/course/courseUpdateModel";
+import { MAIN_DB } from "../../infrastrucure/db";
 import { Collection, DeleteResult, InsertOneResult, UpdateResult } from "mongodb";
-import { settings } from "../settings/settings";
+import { settings } from "../../settings/settings";
 
 const productsCollection: Collection<CourseViewModel> = MAIN_DB.collection<CourseViewModel>(
 	settings.MONGO_DB_COURSES_COLLECTION_NAME!);

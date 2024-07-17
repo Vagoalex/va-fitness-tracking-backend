@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { ErrorService } from "../services/error/errorService";
 import { JwtService } from "../application/jwtService";
-import { usersDbRepository } from "../repositories/usersDbRepository";
+import { usersDbRepository } from "../repositories/db/usersDbRepository";
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
 	const errorResponse = ErrorService.getUnauthorizedResponse();
