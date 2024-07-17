@@ -1,7 +1,7 @@
 import { Collection, InsertOneResult } from "mongodb";
-import { MAIN_DB } from "../infrastrucure/db";
-import { UserViewModel } from "../models/user/userViewModel";
-import { settings } from "../settings/settings";
+import { MAIN_DB } from "../../infrastrucure/db";
+import { UserViewModel } from "../../models/user/userViewModel";
+import { settings } from "../../settings/settings";
 
 const usersCollection: Collection<UserViewModel> = MAIN_DB.collection<UserViewModel>(
 	settings.MONGO_DB_USERS_COLLECTION_NAME!);
@@ -14,7 +14,7 @@ export const usersDbRepository = {
 	async findByLoginOrEmail(loginOrEmail: string) {
 		return usersCollection.findOne({
 			$or: [
-				{ email: loginOrEmail }, { userName: loginOrEmail }
+				{ email: loginOrEmail }, { login: loginOrEmail }
 			]
 		});
 	},

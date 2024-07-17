@@ -6,7 +6,7 @@ import { HTTP_STATUSES_ENUM } from "../types/HttpStatusesEnum";
 import { TypedResponseMessage } from "../types/express/typedResponseMessage";
 import { CourseCreateModel } from "../models/course/courseCreateModel";
 import { CourseUpdateModel } from "../models/course/courseUpdateModel";
-import { coursesDbRepository } from "../repositories/coursesDbRepository";
+import { coursesDbRepository } from "../repositories/db/coursesDbRepository";
 import { ErrorService } from "../services/error/errorService";
 
 export const coursesService = {

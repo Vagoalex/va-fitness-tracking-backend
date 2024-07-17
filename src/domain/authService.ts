@@ -2,17 +2,33 @@ import { TypedResponseWithStatusAndJson } from "../types/express/typedResponseWi
 import { HTTP_STATUSES_ENUM } from "../types/HttpStatusesEnum";
 import { UserCreateModel } from "../models/user/userCreateModel";
 import { usersDbRepository } from "../repositories/db/usersDbRepository";
-import { UserViewModel } from "../models/user/userViewModel";
+import { UserModelsMapper, UserViewModel, UserViewModelClient } from "../models/user/userViewModel";
 import { ErrorService } from "../services/error/errorService";
 import bcrypt from "bcrypt";
 import { UserAuthModel } from "../models/user/userAuthModel";
 import { usersRepository } from "../repositories/common/usersRepository";
+import jwt from "jsonwebtoken";
+import { settings } from "../settings/settings";
+import { ResponseMessage } from "../types/express/typedResponseMessage";
 
-/* Работа с пользователями, возможно, нужно будет для админки */
-export const usersService = {
-	// TODO: возможно, переделать и убрать мыло
-	async createUser(payload: UserCreateModel): Promise<TypedResponseWithStatusAndJson<UserViewModel>> {
-		return await usersRepository.createUser(payload);
+/* Работа с авторизацией для пользователей */
+export const authService = {
+	async createUser(payload: UserCreateModel): Promise<TypedResponseWithStatusAndJson<UserViewModelClient>> {
+		const { status, response } = await usersRepository.createUser(payload);
+		
+		if(status !== HTTP_STATUSES_ENUM.CREATED_201) {
+			const negativeResponse = response as ResponseMessage;
+			
+			return { status, response: negativeResponse };
+		}
+		
+		const positiveResponse = response as UserViewModel;
+		
+		const token = jwt.sign({ id: positiveResponse.id, email: positiveResponse.email }, settings.JWT_SECRET, { expiresIn: "1h" });
+		
+		const mappedUser = UserModelsMapper.mapFromDatabaseToClientModel(positiveResponse, token);
+		
+		return { status, response: mappedUser };
 	},
 	async checkCredentials(payload: UserAuthModel): Promise<TypedResponseWithStatusAndJson<UserViewModel>> {
 		const loginOrEmail = payload.login || payload.email;
@@ -61,4 +77,5 @@ export const usersService = {
 			};
 		}
 	}
+	
 };
